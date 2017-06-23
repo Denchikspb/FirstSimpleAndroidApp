@@ -1,6 +1,7 @@
 package com.example.cherepanov.workout;
 
 
+import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.view.LayoutInflater;
@@ -20,9 +21,17 @@ public class WorkoutDetailFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        if( savedInstanceState != null){
+        if (savedInstanceState != null) {
             workoutId = savedInstanceState.getLong("workoutId");
+        } else {
+            FragmentTransaction ft = getChildFragmentManager().beginTransaction();
+            StopwatchFragment stopwatchFragment = new StopwatchFragment();
+            ft.replace(R.id.stopwatch_container, stopwatchFragment);
+            ft.addToBackStack(null);
+            ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+            ft.commit();
         }
+
         return inflater.inflate(R.layout.fragment_workout_detail, container, false);
     }
 
@@ -30,9 +39,9 @@ public class WorkoutDetailFragment extends Fragment {
     public void onStart() {
         super.onStart();
         View view = getView();
-        if(view != null){
+        if (view != null) {
             TextView title = (TextView) view.findViewById(R.id.textTitle);
-            Workout workout = Workout.workouts[(int)workoutId];
+            Workout workout = Workout.workouts[(int) workoutId];
             title.setText(workout.getName());
             TextView description = (TextView) view.findViewById(R.id.textDescription);
             description.setText(workout.getDescription());
